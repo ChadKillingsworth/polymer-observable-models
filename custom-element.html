@@ -1,0 +1,22 @@
+<link rel="import" href="custom-base.html" />
+<dom-module id="custom-element">
+  <template>
+    <style>
+    </style>
+    <div>Custom Element</div>
+    <div>[[user.name]]</div>
+  </template>
+  <script>
+    class CustomElement extends CustomBase {
+      static get is() { return 'custom-element'; }
+      static get config() {
+        return {
+          properties: {
+            user: ObservableModel
+          }
+        }
+      }
+    }
+    customElements.define(CustomElement.is, CustomElement);
+  </script>
+</dom-module>

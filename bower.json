@@ -1,0 +1,14 @@
+{
+  "name": "polymer-observable-models",
+  "authors": [
+    "Chad Killingsworth <chad.killingsworth@banno.com>"
+  ],
+  "description": "Add observable model support to Polymer properties",
+  "main": "",
+  "license": "Apache-2",
+  "homepage": "",
+  "private": true,
+  "dependencies": {
+    "polymer": "polymer/polymer#2.0-preview"
+  }
+}

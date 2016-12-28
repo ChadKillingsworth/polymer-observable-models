@@ -1,0 +1,83 @@
+<link rel="import" href="bower_components/polymer/polymer.html" />
+<script>
+class CustomBase extends Polymer.Element {
+  constructor() {
+    super();
+    this._observableSubscriptions = Object.create(null);
+    this._addEffectsToObservableProperties();
+  }
+
+  _observablePropertyEvent(propName, data) {
+    const path = `${propName}.${data.path}`;
+    const pathParts = data.path.split('.');
+    let propValue = this[propName];
+    for (let i = 0; i < pathParts.length; i++) {
+      if (!(pathParts[i] in propValue)) {
+        // throw some error
+        return;
+      }
+      propValue = propValue[pathParts[i]];
+    }
+    this.notifyPath(path, propValue);
+  }
+
+  _runObservablePropertyEffect(inst, property, value, old, info) {
+    // This method is executed for sub-property assignments as well when notifyPath
+    // is called. We only want to subscribe to observer notifications on the base
+    // property.
+    if (property.indexOf('.') > 0) {
+      return;
+    }
+
+    if (old !== undefined && old !== null &&
+        property in this._observableSubscriptions) {
+      if (this._observableSubscriptions[property].subscription) {
+        this._observableSubscriptions[property].subscription.unsubscribe();
+        this._observableSubscriptions[property].subscription = undefined;
+      }
+    }
+
+    if (value !== null && value !== undefined) {
+      this._observableSubscriptions[property] = {
+        callback: val => this._observablePropertyEvent(property, val)
+      }
+      if (this.isConnected) {
+        this._observableSubscriptions[property].subscription =
+            value.observable.subscribe(this._observableSubscriptions[property].callback);
+      }
+    } else if (property in this._observableSubscriptions) {
+      delete this._observableSubscriptions[property];
+    }
+  }
+
+  _addEffectsToObservableProperties() {
+    let props = this.constructor._flattenedProperties;
+    let addEffect = (inst, property, value, old, info) =>
+        this._runObservablePropertyEffect(inst, property, value, old, info);
+    for (let propName in props) {
+      if (!props.hasOwnProperty(propName) || props[propName].type !== ObservableModel) {
+        continue;
+      }
+      this._addPropertyEffect(propName, '__observeEffects', {fn: addEffect});
+    }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    for (let propName in this._observableSubscriptions) {
+      this._observableSubscriptions[propName].subscription =
+          this[propName].observable.subscribe(this._observableSubscriptions[propName].callback);
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    for (let propName in this._observableSubscriptions) {
+      if (this._observableSubscriptions[propName].subscription) {
+        this._observableSubscriptions[propName].subscription.unsubscribe();
+        this._observableSubscriptions[propName].subscription = undefined;
+      }
+    }
+  }
+}
+</script>

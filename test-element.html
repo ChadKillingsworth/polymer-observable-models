@@ -1,0 +1,25 @@
+<link rel="import" href="bower_components/polymer/src/elements/element.html" />
+<link rel="import" href="custom-element.html" />
+<dom-module id="test-element">
+  <template>
+    <style>
+    </style>
+    <div>Test Element</div>
+    <custom-element user="[[user]]"></custom-element>
+  </template>
+  <script>
+    window.user = new UserModel();
+    window.user.name = "Chad Killingsworth";
+    class TestElement extends Polymer.Element {
+      static get is() { return 'test-element'; }
+      static get config() {
+        return {properties: {}};
+      }
+      constructor() {
+        super();
+        this.user = window.user;
+      }
+    }
+    customElements.define(TestElement.is, TestElement);
+  </script>
+</dom-module>
