@@ -8,7 +8,7 @@ class CustomBase extends Polymer.Element {
   }
 
   _observablePropertyEvent(propName, data) {
-    this.notifyPath`${propName}.${data.path}`, data.value);
+    this.notifyPath(`${propName}.${data.path}`, data.value);
   }
 
   _runObservablePropertyEffect(inst, property, value, old, info) {
