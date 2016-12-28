@@ -8,24 +8,14 @@ class CustomBase extends Polymer.Element {
   }
 
   _observablePropertyEvent(propName, data) {
-    const path = `${propName}.${data.path}`;
-    const pathParts = data.path.split('.');
-    let propValue = this[propName];
-    for (let i = 0; i < pathParts.length; i++) {
-      if (!(pathParts[i] in propValue)) {
-        // throw some error
-        return;
-      }
-      propValue = propValue[pathParts[i]];
-    }
-    this.notifyPath(path, propValue);
+    this.notifyPath`${propName}.${data.path}`, data.value);
   }
 
   _runObservablePropertyEffect(inst, property, value, old, info) {
     // This method is executed for sub-property assignments as well when notifyPath
     // is called. We only want to subscribe to observer notifications on the base
     // property.
-    if (property.indexOf('.') > 0) {
+    if (property.indexOf('.') >= 0) {
       return;
     }
 
