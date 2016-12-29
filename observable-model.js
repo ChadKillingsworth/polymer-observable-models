@@ -3,7 +3,7 @@ class ObservableModel {
     this._observables = new Set();
   }
 
-  /** @type {!Observable} */
+  /** @return {!Observable} */
   observable() {
     return new Observable(observer => {
       this._observables.add(observer);
@@ -13,6 +13,12 @@ class ObservableModel {
     });
   }
 
+  /**
+   * @param {{
+   *     path: string,
+   *     value: *
+   *   }} data
+   */
   emit(data) {
     this._observables.forEach(value => {
       value.next(data);
