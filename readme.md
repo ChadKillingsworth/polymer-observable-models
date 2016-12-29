@@ -3,8 +3,7 @@ Using custom models with Polymer properties is challenging. Polymer requires tha
 called for external changes to deep model properties in order for it to recognize the update. This project
 demonstrates adding support for an `ObservableModel` type as a Polymer property.
 
-The model has an `observable` property which allows Polymer to subscribe to update notifications. The model
-emits property updates which Polymer uses automatically call notifyPath.
+The model has an `observable` method which returns an `Observable` that enables Polymer to subscribe to update notifications. The model emits property updates which Polymer uses to automatically call notifyPath.
 
 ## Example usage
 The [custom-element.html file](custom-element.html) has an example usage.
