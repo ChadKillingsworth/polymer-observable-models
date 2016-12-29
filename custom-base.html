@@ -33,7 +33,7 @@ class CustomBase extends Polymer.Element {
       }
       if (this.isConnected) {
         this._observableSubscriptions[property].subscription =
-            value.observable.subscribe(this._observableSubscriptions[property].callback);
+            value.observable().subscribe(this._observableSubscriptions[property].callback);
       }
     } else if (property in this._observableSubscriptions) {
       delete this._observableSubscriptions[property];
@@ -56,7 +56,7 @@ class CustomBase extends Polymer.Element {
     super.connectedCallback();
     for (let propName in this._observableSubscriptions) {
       this._observableSubscriptions[propName].subscription =
-          this[propName].observable.subscribe(this._observableSubscriptions[propName].callback);
+          this[propName].observable().subscribe(this._observableSubscriptions[propName].callback);
     }
   }
 
